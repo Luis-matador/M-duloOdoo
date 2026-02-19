@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="view_academia_sesion_tree" model="ir.ui.view">
+        <field name="name">academia.sesion.tree</field>
+        <field name="model">academia.sesion</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="porcentaje_ocupacion &gt;= 100" decoration-warning="porcentaje_ocupacion &gt;= 50 and porcentaje_ocupacion &lt; 100" decoration-success="porcentaje_ocupacion &lt; 50">
+                <field name="display_name"/>
+                <field name="curso_id"/>
+                <field name="profesor_id"/>
+                <field name="fecha_inicio"/>
+                <field name="duracion"/>
+                <field name="num_asientos"/>
+                <field name="asientos_disponibles"/>
+                <field name="porcentaje_ocupacion" widget="progressbar"/>
+                <field name="state" widget="badge" decoration-info="state == 'pendiente'" decoration-warning="state == 'confirmada'" decoration-primary="state == 'en_curso'" decoration-success="state == 'finalizada'" decoration-danger="state == 'cancelada'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_academia_sesion_form" model="ir.ui.view">
+        <field name="name">academia.sesion.form</field>
+        <field name="model">academia.sesion</field>
+        <field name="arch" type="xml">
+            <form string="Sesión">
+                <header>
+                    <button name="action_confirmar" string="Confirmar" type="object" class="btn-primary" invisible="state != 'pendiente'"/>
+                    <button name="action_en_curso" string="Iniciar" type="object" class="btn-primary" invisible="state != 'confirmada'"/>
+                    <button name="action_finalizar" string="Finalizar" type="object" class="btn-primary" invisible="state != 'en_curso'"/>
+                    <button name="action_cancelar" string="Cancelar" type="object" class="btn-danger" invisible="state in ('finalizada', 'cancelada')"/>
+                    <button name="action_pendiente" string="Volver a Pendiente" type="object" invisible="state != 'cancelada'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pendiente,confirmada,en_curso,finalizada"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="curso_id"/>
+                            <field name="profesor_id"/>
+                            <field name="fecha_inicio"/>
+                            <field name="duracion"/>
+                        </group>
+                        <group>
+                            <field name="num_asientos"/>
+                            <field name="asientos_disponibles"/>
+                            <field name="porcentaje_ocupacion" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Alumnos Inscritos">
+                            <field name="alumno_ids">
+                                <list>
+                                    <field name="nombre_completo"/>
+                                    <field name="email"/>
+                                    <field name="telefono"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Matrículas">
+                            <field name="matricula_ids">
+                                <list>
+                                    <field name="alumno_id"/>
+                                    <field name="fecha_matricula"/>
+                                    <field name="state" widget="badge" decoration-info="state == 'borrador'" decoration-warning="state == 'confirmada'" decoration-success="state == 'pagada'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Calendar View -->
+    <record id="view_academia_sesion_calendar" model="ir.ui.view">
+        <field name="name">academia.sesion.calendar</field>
+        <field name="model">academia.sesion</field>
+        <field name="arch" type="xml">
+            <calendar string="Sesiones" date_start="fecha_inicio" color="color" event_limit="5">
+                <field name="display_name"/>
+                <field name="profesor_id"/>
+                <field name="num_asientos"/>
+                <field name="asientos_disponibles"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_academia_sesion_kanban" model="ir.ui.view">
+        <field name="name">academia.sesion.kanban</field>
+        <field name="model">academia.sesion</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="display_name"/>
+                <field name="curso_id"/>
+                <field name="profesor_id"/>
+                <field name="fecha_inicio"/>
+                <field name="num_asientos"/>
+                <field name="asientos_disponibles"/>
+                <field name="porcentaje_ocupacion"/>
+                <field name="color"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="display_name" class="fw-bold"/>
+                        <div><field name="curso_id"/></div>
+                        <div>Profesor: <field name="profesor_id"/></div>
+                        <div>Asientos: <field name="asientos_disponibles"/>/<field name="num_asientos"/></div>
+                        <field name="porcentaje_ocupacion" widget="progressbar"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_academia_sesion_search" model="ir.ui.view">
+        <field name="name">academia.sesion.search</field>
+        <field name="model">academia.sesion</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Sesiones">
+                <field name="curso_id"/>
+                <field name="profesor_id"/>
+                <separator/>
+                <filter string="Disponibles" name="disponibles" domain="[('asientos_disponibles','&gt;',0)]"/>
+                <filter string="Llenas" name="llenas" domain="[('asientos_disponibles','&lt;=',0)]"/>
+                <separator/>
+                <filter string="Pendiente" name="pendiente" domain="[('state','=','pendiente')]"/>
+                <filter string="Confirmada" name="confirmada" domain="[('state','=','confirmada')]"/>
+                <filter string="En Curso" name="en_curso" domain="[('state','=','en_curso')]"/>
+                <filter string="Finalizada" name="finalizada" domain="[('state','=','finalizada')]"/>
+                <separator/>
+                <group>
+                    <filter string="Curso" name="group_curso" domain="[]" context="{'group_by':'curso_id'}"/>
+                    <filter string="Profesor" name="group_profesor" domain="[]" context="{'group_by':'profesor_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_academia_sesion" model="ir.actions.act_window">
+        <field name="name">Sesiones</field>
+        <field name="res_model">academia.sesion</field>
+        <field name="view_mode">list,form,calendar,kanban</field>
+    </record>
+
+    <!-- Action: Calendario de Sesiones -->
+    <record id="action_academia_sesion_calendar" model="ir.actions.act_window">
+        <field name="name">Calendario de Sesiones</field>
+        <field name="res_model">academia.sesion</field>
+        <field name="view_mode">calendar,list,form</field>
+    </record>
+
+    <!-- Action: Planificación Kanban -->
+    <record id="action_academia_sesion_kanban" model="ir.actions.act_window">
+        <field name="name">Planificación</field>
+        <field name="res_model">academia.sesion</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="view_academia_matricula_tree" model="ir.ui.view">
+        <field name="name">academia.matricula.tree</field>
+        <field name="model">academia.matricula</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="display_name"/>
+                <field name="alumno_id"/>
+                <field name="sesion_id"/>
+                <field name="fecha_matricula"/>
+                <field name="state" widget="badge" decoration-info="state == 'borrador'" decoration-warning="state == 'confirmada'" decoration-success="state == 'pagada'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View con statusbar y botones de flujo -->
+    <record id="view_academia_matricula_form" model="ir.ui.view">
+        <field name="name">academia.matricula.form</field>
+        <field name="model">academia.matricula</field>
+        <field name="arch" type="xml">
+            <form string="Matrícula">
+                <header>
+                    <button name="action_confirmar" type="object" string="Confirmar"
+                            class="btn-primary"
+                            invisible="state != 'borrador'"/>
+                    <button name="action_pagar" type="object" string="Registrar Pago"
+                            class="btn-primary"
+                            invisible="state != 'confirmada'"/>
+                    <button name="action_borrador" type="object" string="Volver a Borrador"
+                            invisible="state == 'borrador'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="borrador,confirmada,pagada"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="alumno_id"/>
+                            <field name="sesion_id"/>
+                        </group>
+                        <group>
+                            <field name="fecha_matricula"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_academia_matricula_kanban" model="ir.ui.view">
+        <field name="name">academia.matricula.kanban</field>
+        <field name="model">academia.matricula</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="display_name"/>
+                <field name="alumno_id"/>
+                <field name="sesion_id"/>
+                <field name="fecha_matricula"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="display_name" class="fw-bold"/>
+                        <div>Fecha: <field name="fecha_matricula"/></div>
+                        <field name="state" widget="badge" decoration-info="state == 'borrador'" decoration-warning="state == 'confirmada'" decoration-success="state == 'pagada'"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_academia_matricula_search" model="ir.ui.view">
+        <field name="name">academia.matricula.search</field>
+        <field name="model">academia.matricula</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Matrículas">
+                <field name="alumno_id"/>
+                <field name="sesion_id"/>
+                <separator/>
+                <filter string="Borrador" name="borrador" domain="[('state','=','borrador')]"/>
+                <filter string="Confirmada" name="confirmada" domain="[('state','=','confirmada')]"/>
+                <filter string="Pagada" name="pagada" domain="[('state','=','pagada')]"/>
+                <separator/>
+                <group>
+                    <filter string="Estado" name="group_state" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Sesión" name="group_sesion" domain="[]" context="{'group_by':'sesion_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_academia_matricula" model="ir.actions.act_window">
+        <field name="name">Matrículas</field>
+        <field name="res_model">academia.matricula</field>
+        <field name="view_mode">list,form,kanban</field>
+    </record>
+
+</odoo>

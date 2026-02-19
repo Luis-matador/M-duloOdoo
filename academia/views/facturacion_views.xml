@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="view_academia_facturacion_tree" model="ir.ui.view">
+        <field name="name">academia.facturacion.tree</field>
+        <field name="model">academia.facturacion</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="numero_factura"/>
+                <field name="alumno_id"/>
+                <field name="curso_id"/>
+                <field name="concepto"/>
+                <field name="cantidad"/>
+                <field name="fecha_pago"/>
+                <field name="estado" widget="badge" decoration-info="estado == 'pendiente'" decoration-success="estado == 'pagada'" decoration-danger="estado == 'cancelada'"/>
+                <field name="metodo_pago"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_academia_facturacion_form" model="ir.ui.view">
+        <field name="name">academia.facturacion.form</field>
+        <field name="model">academia.facturacion</field>
+        <field name="arch" type="xml">
+            <form string="Factura">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="numero_factura"/>
+                            <field name="alumno_id"/>
+                            <field name="curso_id"/>
+                        </group>
+                        <group>
+                            <field name="concepto"/>
+                            <field name="cantidad"/>
+                            <field name="fecha_pago"/>
+                            <field name="estado"/>
+                            <field name="metodo_pago"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_academia_facturacion_search" model="ir.ui.view">
+        <field name="name">academia.facturacion.search</field>
+        <field name="model">academia.facturacion</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Facturas">
+                <field name="numero_factura"/>
+                <field name="alumno_id"/>
+                <field name="curso_id"/>
+                <separator/>
+                <filter string="Pendientes" name="pendientes" domain="[('estado','=','pendiente')]"/>
+                <filter string="Pagadas" name="pagadas" domain="[('estado','=','pagada')]"/>
+                <separator/>
+                <group>
+                    <filter string="Estado" name="group_estado" domain="[]" context="{'group_by':'estado'}"/>
+                    <filter string="Alumno" name="group_alumno" domain="[]" context="{'group_by':'alumno_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_academia_facturacion" model="ir.actions.act_window">
+        <field name="name">Facturación</field>
+        <field name="res_model">academia.facturacion</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

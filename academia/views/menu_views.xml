@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menú Principal -->
+    <menuitem id="menu_academia_root"
+              name="Academia"
+              sequence="10"/>
+
+    <!-- Submenú: Educación -->
+    <menuitem id="menu_academia_educacion"
+              name="Educación"
+              parent="menu_academia_root"
+              sequence="10"/>
+
+    <menuitem id="menu_academia_curso"
+              name="Cursos"
+              parent="menu_academia_educacion"
+              action="action_academia_curso"
+              sequence="10"/>
+
+    <menuitem id="menu_academia_sesion"
+              name="Sesiones"
+              parent="menu_academia_educacion"
+              action="action_academia_sesion"
+              sequence="20"/>
+
+    <menuitem id="menu_academia_sesion_calendar"
+              name="Calendario"
+              parent="menu_academia_educacion"
+              action="action_academia_sesion_calendar"
+              sequence="25"/>
+
+    <menuitem id="menu_academia_sesion_kanban"
+              name="Planificación"
+              parent="menu_academia_educacion"
+              action="action_academia_sesion_kanban"
+              sequence="26"/>
+
+    <menuitem id="menu_academia_clase"
+              name="Clases"
+              parent="menu_academia_educacion"
+              action="action_academia_clase"
+              sequence="30"/>
+
+    <!-- Submenú: Personas -->
+    <menuitem id="menu_academia_personas"
+              name="Personas"
+              parent="menu_academia_root"
+              sequence="20"/>
+
+    <menuitem id="menu_academia_alumno"
+              name="Alumnos"
+              parent="menu_academia_personas"
+              action="action_academia_alumno"
+              sequence="10"/>
+
+    <menuitem id="menu_academia_profesor"
+              name="Profesores"
+              parent="menu_academia_personas"
+              action="action_academia_profesor"
+              sequence="20"/>
+
+    <!-- Submenú: Administración -->
+    <menuitem id="menu_academia_admin"
+              name="Administración"
+              parent="menu_academia_root"
+              sequence="30"/>
+
+    <menuitem id="menu_academia_matricula"
+              name="Matrículas"
+              parent="menu_academia_admin"
+              action="action_academia_matricula"
+              sequence="10"/>
+
+    <menuitem id="menu_academia_facturacion"
+              name="Facturación"
+              parent="menu_academia_admin"
+              action="action_academia_facturacion"
+              sequence="20"/>
+
+</odoo>

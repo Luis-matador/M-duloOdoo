@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="view_academia_clase_tree" model="ir.ui.view">
+        <field name="name">academia.clase.tree</field>
+        <field name="model">academia.clase</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="nombre"/>
+                <field name="curso_id"/>
+                <field name="profesor_id"/>
+                <field name="dia_semana"/>
+                <field name="hora_inicio" widget="float_time"/>
+                <field name="hora_fin" widget="float_time"/>
+                <field name="aula"/>
+                <field name="capacidad_maxima"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_academia_clase_form" model="ir.ui.view">
+        <field name="name">academia.clase.form</field>
+        <field name="model">academia.clase</field>
+        <field name="arch" type="xml">
+            <form string="Clase">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="nombre"/>
+                            <field name="curso_id"/>
+                            <field name="profesor_id"/>
+                        </group>
+                        <group>
+                            <field name="dia_semana"/>
+                            <field name="horario"/>
+                            <field name="hora_inicio" widget="float_time"/>
+                            <field name="hora_fin" widget="float_time"/>
+                            <field name="aula"/>
+                            <field name="capacidad_maxima"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Alumnos">
+                            <field name="alumno_ids">
+                                <list>
+                                    <field name="nombre_completo"/>
+                                    <field name="email"/>
+                                    <field name="telefono"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_academia_clase_kanban" model="ir.ui.view">
+        <field name="name">academia.clase.kanban</field>
+        <field name="model">academia.clase</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="curso_id">
+                <field name="nombre"/>
+                <field name="curso_id"/>
+                <field name="dia_semana"/>
+                <field name="hora_inicio"/>
+                <field name="hora_fin"/>
+                <field name="aula"/>
+                <field name="profesor_id"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="nombre" class="fw-bold fs-5"/>
+                        <div><field name="dia_semana"/> | <field name="hora_inicio" widget="float_time"/> - <field name="hora_fin" widget="float_time"/></div>
+                        <div>Aula: <field name="aula"/></div>
+                        <div>Profesor: <field name="profesor_id"/></div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_academia_clase_search" model="ir.ui.view">
+        <field name="name">academia.clase.search</field>
+        <field name="model">academia.clase</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Clases">
+                <field name="nombre"/>
+                <field name="curso_id"/>
+                <field name="profesor_id"/>
+                <group>
+                    <filter string="Curso" name="group_curso" domain="[]" context="{'group_by':'curso_id'}"/>
+                    <filter string="Día" name="group_dia" domain="[]" context="{'group_by':'dia_semana'}"/>
+                    <filter string="Profesor" name="group_profesor" domain="[]" context="{'group_by':'profesor_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_academia_clase" model="ir.actions.act_window">
+        <field name="name">Clases</field>
+        <field name="res_model">academia.clase</field>
+        <field name="view_mode">list,form,kanban</field>
+    </record>
+
+</odoo>

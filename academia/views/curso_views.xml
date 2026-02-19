@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="view_academia_curso_tree" model="ir.ui.view">
+        <field name="name">academia.curso.tree</field>
+        <field name="model">academia.curso</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="titulo"/>
+                <field name="nivel"/>
+                <field name="precio"/>
+                <field name="profesor_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_academia_curso_form" model="ir.ui.view">
+        <field name="name">academia.curso.form</field>
+        <field name="model">academia.curso</field>
+        <field name="arch" type="xml">
+            <form string="Curso">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="titulo"/>
+                            <field name="nivel"/>
+                            <field name="precio"/>
+                        </group>
+                        <group>
+                            <field name="profesor_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="descripcion"/>
+                    </group>
+                    <notebook>
+                        <page string="Sesiones">
+                            <field name="sesion_ids">
+                                <list>
+                                    <field name="display_name"/>
+                                    <field name="fecha_inicio"/>
+                                    <field name="duracion"/>
+                                    <field name="num_asientos"/>
+                                    <field name="asientos_disponibles"/>
+                                    <field name="porcentaje_ocupacion" widget="progressbar"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Clases">
+                            <field name="clase_ids">
+                                <list>
+                                    <field name="nombre"/>
+                                    <field name="dia_semana"/>
+                                    <field name="hora_inicio" widget="float_time"/>
+                                    <field name="hora_fin" widget="float_time"/>
+                                    <field name="aula"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_academia_curso_search" model="ir.ui.view">
+        <field name="name">academia.curso.search</field>
+        <field name="model">academia.curso</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Cursos">
+                <field name="titulo"/>
+                <field name="nivel"/>
+                <field name="profesor_id"/>
+                <separator/>
+                <filter string="A1" name="nivel_a1" domain="[('nivel','=','a1')]"/>
+                <filter string="A2" name="nivel_a2" domain="[('nivel','=','a2')]"/>
+                <filter string="B1" name="nivel_b1" domain="[('nivel','=','b1')]"/>
+                <filter string="B2" name="nivel_b2" domain="[('nivel','=','b2')]"/>
+                <filter string="C1" name="nivel_c1" domain="[('nivel','=','c1')]"/>
+                <filter string="C2" name="nivel_c2" domain="[('nivel','=','c2')]"/>
+                <separator/>
+                <group>
+                    <filter string="Nivel" name="group_nivel" domain="[]" context="{'group_by':'nivel'}"/>
+                    <filter string="Profesor" name="group_profesor" domain="[]" context="{'group_by':'profesor_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_academia_curso_kanban" model="ir.ui.view">
+        <field name="name">academia.curso.kanban</field>
+        <field name="model">academia.curso</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="titulo"/>
+                <field name="nivel"/>
+                <field name="precio"/>
+                <field name="profesor_id"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="titulo" class="fw-bold fs-5"/>
+                        <div>Nivel: <field name="nivel"/></div>
+                        <div>Precio: <field name="precio"/> €</div>
+                        <div>Profesor: <field name="profesor_id"/></div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_academia_curso" model="ir.actions.act_window">
+        <field name="name">Cursos</field>
+        <field name="res_model">academia.curso</field>
+        <field name="view_mode">list,form,kanban</field>
+    </record>
+
+</odoo>
